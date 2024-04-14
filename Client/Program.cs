@@ -35,23 +35,21 @@ namespace Client
         static async Task IsPalindromeCheckProcessAsync(string filePath)
         {
             string text = GetTextFromFile(filePath);
-            string response = null;
+            string result = "";
 
             try
             {
-                response = await GetIsPalindromeAsync(text);
-                
+                result = await GetIsPalindromeAsync(text);
             }
             catch (Exception ex)
             {
-                response = $"Не удалось проверить файл {filePath} ({ex.Message})";
+                result = $"Ошибка: {ex.Message} ";
             }
             finally
             {
                 await Console.Out.WriteLineAsync($"Путь к файлу: {filePath}\n" +
-                    $"Ответ от сервера: {response}");
+                    $"Результат проверки: {result}");
             }
-
         }
         
         static string GetTextFromFile(string filePath)
@@ -62,6 +60,7 @@ namespace Client
         static async Task<string> GetIsPalindromeAsync(string text)
         {
             const int attemptCount = 100;
+            const int nextAttemptDelay = 1500;
 
             using (HttpClient client = new HttpClient())
             {
@@ -72,7 +71,7 @@ namespace Client
                     if (response.IsSuccessStatusCode)
                         return await response.Content.ReadAsStringAsync();
                     else if (response.StatusCode == HttpStatusCode.ServiceUnavailable)
-                        await Task.Delay(2000);
+                        await Task.Delay(nextAttemptDelay);
                     else
                         throw new Exception($"Ошибка при выполнении запроса ({response.StatusCode})");
                 }
