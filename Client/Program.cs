@@ -1,5 +1,4 @@
 ﻿using System.Net;
-using System.Runtime.ConstrainedExecution;
 
 namespace Client
 {
@@ -51,7 +50,7 @@ namespace Client
                     $"Результат проверки: {result}");
             }
         }
-        
+
         static string GetTextFromFile(string filePath)
         {
             using (StreamReader sr = new StreamReader(filePath))

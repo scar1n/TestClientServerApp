@@ -8,8 +8,19 @@ namespace Server.Controllers
 
     public class PalindromeCheckController : Controller
     {
+        static public string RemovePunctuation(string input)
+        {
+            string output = input
+                .Replace(" ", "")
+                .Replace("!", "")
+                .Replace(".", "")
+                .Replace("?", "")
+                .Replace(",", "");
+            return output;
+        }
         static public bool IsPalindrome(string checkString)
         {
+            checkString = RemovePunctuation(checkString.ToLower());
             if (checkString == null) return false;
             for (int i = 0; i < checkString.Length / 2; i++)
             {
